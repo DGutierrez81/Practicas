@@ -57,18 +57,33 @@ fun Screen(navController: NavController, viewmodel: Viewmodel) {
     LazyColumn() {
         itemsIndexed(lista2) { index, item ->
 
-            val termsTitle = item["dcterms:title"] as? List<Map<String, Any>>
-            
-            if(termsTitle != null){
-                for(i in termsTitle){
-                    for((key, value) in i){
-                        Text(text = "Clave $key, Value $value")
-                    }
-                }
-            }else{
-                Text(text = "No hay nada")
-            }
+            //val termsTitle = item["dcterms:title"] as? List<Map<String, Any>>
 
+
+            //Saco la información dependiendo si la clave contiene una determinada determinada
+            for (mapa in lista2) {
+                if (mapa.keys.any { it.contains("dcterms") }) {
+                    // El mapa contiene la clase "dcterms"
+                    for ((key, value) in mapa) {
+                        Text(text = key)
+                        if (value is List<*>) {
+                            // Si el valor es una lista de mapas
+                            for (submapa in value) {
+                                if (submapa is Map<*, *>) {
+                                    // Si el submapa es un mapa
+                                    for ((subkey, subvalue) in submapa) {
+                                        // Imprimir las claves y valores
+                                        Text(text = "Clave $subkey, Valor $subvalue")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // El mapa no contiene la clase "dcterms"
+                    Text(text = "No hay información de 'dcterms'")
+                }
+            }
 
             /*
             //Saco la información de o:media
